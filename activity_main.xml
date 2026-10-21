@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1A1A"> <!-- Background gelap mirip TFT -->
+
+    <!-- Arc Speedometer (pakai library SpeedView) -->
+    <com.github.anastr.speedviewlib.SpeedView
+        android:id="@+id/speedView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        app:sv_speedTextColor="#FFFFFF"
+        app:sv_unitTextColor="#AAAAAA"
+        app:sv_maxSpeed="120"
+        app:sv_tickNumber="12" />
+
+    <!-- Angka Kecepatan Besar (di tengah) -->
+    <TextView
+        android:id="@+id/tvSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="0"
+        android:textColor="#FFFFFF"
+        android:textSize="80sp"
+        android:textStyle="bold" />
+
+    <!-- Teks km/h -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSpeed"
+        android:layout_centerHorizontal="true"
+        android:text="km/h"
+        android:textColor="#AAAAAA"
+        android:textSize="18sp" />
+
+    <!-- Odometer -->
+    <TextView
+        android:id="@+id/tvOdometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_centerHorizontal="true"
+        android:text="TOTAL 160 km"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+</RelativeLayout>
