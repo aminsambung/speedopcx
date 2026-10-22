@@ -2,12 +2,172 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A">
+    android:background="#FAFAFA"
+    android:padding="20dp">
 
-    <com.example.pcxui.PcxSpeedometerView
-        android:id="@+id/pcxSpeedometer"
+    <!-- 1. Lengkungan RPM di Atas -->
+    <com.example.pcxui.RpmArcView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:layout_height="200dp" />
+
+    <!-- Teks x1000 r/min -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="40dp"
+        android:text="x1000 r/min"
+        android:textColor="#888888"
+        android:textSize="12sp" />
+
+    <!-- 2. Indikator Bensin (Kiri) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+        <ProgressBar
+            android:layout_width="15dp"
+            android:layout_height="80dp"
+            android:layout_marginVertical="5dp"
+            android:progressDrawable="@drawable/battery_progress"
+            android:progress="100" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 3. Angka Kecepatan Besar (Tengah) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
+        
+        <TextView
+            android:id="@+id/tvSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="150sp"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="km/h"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- 4. Kotak TRIP A (Kanan) -->
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:background="#EEEEEE"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TRIP A"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+            
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="km"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:layout_gravity="end" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC"
+            android:layout_marginVertical="10dp" />
+
+        <!-- Grafik Batang (Bar Chart) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="20dp" android:background="#888888" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="30dp" android:background="#888888" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="15dp" android:background="#888888" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="35dp" android:background="#888888" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="25dp" android:background="#888888" />
+        </LinearLayout>
+        <!-- Angka Bawah Grafik -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="0" android:textSize="10sp" android:gravity="start"/>
+            <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="40" android:textSize="10sp" android:gravity="center"/>
+            <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="80" android:textSize="10sp" android:gravity="end"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="km/L"
+            android:textColor="#888888"
+            android:textSize="10sp"
+            android:layout_gravity="end"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <!-- 5. Odometer Total (Bawah) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="150dp"
+        android:orientation="horizontal"
+        android:background="#E0E0E0"
+        android:padding="10dp">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOTAL     "
+            android:textColor="#555555"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="160 km"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>
