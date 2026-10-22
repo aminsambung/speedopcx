@@ -1,29 +1,35 @@
-package com.example.pcxui // <-- TAMBAHKAN INI
+package com.example.pcxui
 
 import android.os.Bundle
-import android.widget.Button
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import java.util.Random
 
 class MainActivity : AppCompatActivity() {
-
-    private var speed = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // 1. Panggil Custom View milikmu
         val speedView = findViewById<PcxSpeedometerView>(R.id.pcxSpeedometer)
-        val btnPlus = findViewById<Button>(R.id.btnPlus)
-        val btnMinus = findViewById<Button>(R.id.btnMinus)
 
-        btnPlus.setOnClickListener {
-            if (speed < 10f) speed += 1f
-            speedView.currentSpeed = speed
-        }
+        // 2. Buat simulasi pergerakan jarum
+        val handler = Handler(Looper.getMainLooper())
+        val random = Random()
 
-        btnMinus.setOnClickListener {
-            if (speed > 0f) speed -= 1f
-            speedView.currentSpeed = speed
-        }
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                // Buat angka acak dari 0.0 sampai 10.0
+                val fakeSpeed = random.nextFloat() * 10f
+                
+                // Kirim angka ke Custom View
+                speedView.currentSpeed = fakeSpeed
+                
+                // Ulangi setiap 1.5 detik
+                handler.postDelayed(this, 1500)
+            }
+        }, 1000)
     }
 }
