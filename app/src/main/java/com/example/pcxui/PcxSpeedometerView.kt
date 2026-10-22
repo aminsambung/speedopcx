@@ -16,7 +16,7 @@ class PcxSpeedometerView @JvmOverloads constructor(
 
     var currentSpeed = 0f
         set(value) {
-            field = value.coerceIn(0f, 10f) // Pastikan nilai tidak lebih dari 10
+            field = value.coerceIn(0f, 10f)
             invalidate()
         }
 
@@ -25,105 +25,123 @@ class PcxSpeedometerView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
         
-        // Posisi tengah disesuaikan agar mirip layar TFT PCX
+        // Posisi tengah layar (untuk teks dan indikator)
         val centerX = w / 2
-        val centerY = h / 2 + 50f 
-        val radius = w.coerceAtMost(h) * 0.35f // Radius lingkaran
+        val centerY = h / 2
+        
+        // Radius busur atas (dibuat lebih lebar agar memenuhi layar)
+        val radius = w.coerceAtMost(h) * 0.42f
+        val arcCenterY = centerY - 50f // Pusat busur digeser ke atas
 
-        canvas.drawColor(Color.parseColor("#1A1A1A"))
+        canvas.drawColor(Color.parseColor("#1A1A1A")) // Background gelap
 
-        // 1. Gambar Arc Speedometer (Hanya bagian atas)
-        val rectF = RectF(centerX - radius, centerY - radius, centerX + radius, centerY + radius)
+        // ==========================================
+        // 1. GAMBAR BUSUR (ARC) ABU-ABU
+        // ==========================================
+        val rectF = RectF(centerX - radius, arcCenterY - radius, centerX + radius, arcCenterY + radius)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 35f
         paint.color = Color.parseColor("#333333")
         
-        // Mulai dari 150 derajat, sapu 240 derajat (Hanya melengkung di atas)
+        // Mulai dari 150 derajat, sapu 240 derajat
         canvas.drawArc(rectF, 150f, 240f, false, paint)
 
-        // 2. Gambar Tick Marks & Angka
+        // ==========================================
+        // 2. TICK MARKS & ANGKA (0-10)
+        // ==========================================
         textPaint.color = Color.WHITE
         textPaint.textSize = 55f
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.typeface = Typeface.DEFAULT_BOLD
         
         for (i in 0..10) {
-            val angle = 150f + (i * 24f) // 24 derajat per angka
+            val angle = 150f + (i * 24f) 
             val rad = Math.toRadians(angle.toDouble())
             
-            // Garis Tick (Lebih tebal dan jelas)
-            val tickStartX = centerX + (radius - 25) * cos(rad).toFloat()
-            val tickStartY = centerY + (radius - 25) * sin(rad).toFloat()
-            val tickEndX = centerX + (radius + 25) * cos(rad).toFloat()
-            val tickEndY = centerY + (radius + 25) * sin(rad).toFloat()
+            // Garis Tick
+            val tickStartX = centerX + (radius - 20) * cos(rad).toFloat()
+            val tickStartY = arcCenterY + (radius - 20) * sin(rad).toFloat()
+            val tickEndX = centerX + (radius + 20) * cos(rad).toFloat()
+            val tickEndY = arcCenterY + (radius + 20) * sin(rad).toFloat()
 
-            // Warna merah untuk angka 8, 9, 10
+            // Warna merah untuk 8, 9, 10
             paint.color = if (i >= 8) Color.RED else Color.WHITE
             paint.strokeWidth = 6f
             canvas.drawLine(tickStartX, tickStartY, tickEndX, tickEndY, paint)
 
             // Posisi Angka
-            val textX = centerX + (radius - 75) * cos(rad).toFloat()
-            val textY = centerY + (radius - 75) * sin(rad).toFloat()
+            val textX = centerX + (radius - 80) * cos(rad).toFloat()
+            val textY = arcCenterY + (radius - 80) * sin(rad).toFloat()
             
-            // Reset warna teks jadi putih (kecuali angka merah)
             textPaint.color = if (i >= 8) Color.RED else Color.WHITE
             canvas.drawText(i.toString(), textX, textY + 15, textPaint)
         }
 
-        // 3. Gambar Jarum Merah
+        // ==========================================
+        // 3. GAMBAR JARUM MERAH
+        // ==========================================
         val speedAngle = 150f + (currentSpeed * 24f)
         val speedRad = Math.toRadians(speedAngle.toDouble())
         
         paint.color = Color.RED
         paint.strokeWidth = 12f
         paint.strokeCap = Paint.Cap.ROUND
+        
+        // Jarum dimulai dari pusat busur (arcCenterY)
         canvas.drawLine(
-            centerX, centerY,
-            centerX + (radius - 40) * cos(speedRad).toFloat(),
-            centerY + (radius - 40) * sin(speedRad).toFloat(),
+            centerX, arcCenterY,
+            centerX + (radius - 30) * cos(speedRad).toFloat(),
+            arcCenterY + (radius - 30) * sin(speedRad).toFloat(),
             paint
         )
         
         // Titik pusat jarum
         paint.style = Paint.Style.FILL
-        canvas.drawCircle(centerX, centerY, 15f, paint)
+        canvas.drawCircle(centerX, arcCenterY, 15f, paint)
 
-        // 4. Gambar Angka Kecepatan Besar di Tengah (Sangat Besar)
+        // ==========================================
+        // 4. TEKS KECEPATAN BESAR (Tengah)
+        // ==========================================
+        // Teks diletakkan di tengah layar, bukan di pusat busur
         textPaint.color = Color.WHITE
-        textPaint.textSize = 220f // Ukuran diperbesar
+        textPaint.textSize = 240f // Sangat besar
         textPaint.typeface = Typeface.DEFAULT_BOLD
         canvas.drawText(currentSpeed.toInt().toString(), centerX, centerY + 70, textPaint)
 
-        // Teks "km/h" di bawah angka
-        textPaint.textSize = 50f
+        // Teks "km/h"
+        textPaint.textSize = 45f
         textPaint.typeface = Typeface.DEFAULT
         textPaint.color = Color.GRAY
         canvas.drawText("km/h", centerX, centerY + 130, textPaint)
 
-        // 5. Gambar Indikator Bensin (Kotak di sebelah Kiri)
+        // ==========================================
+        // 5. INDIKATOR BENSIN (Kiri)
+        // ==========================================
         textPaint.color = Color.WHITE
-        textPaint.textSize = 40f
+        textPaint.textSize = 35f
         textPaint.typeface = Typeface.DEFAULT_BOLD
+        
         // Huruf F dan E
-        canvas.drawText("F", centerX - radius - 60, centerY - radius + 60, textPaint)
-        canvas.drawText("E", centerX - radius - 60, centerY + radius - 60, textPaint)
+        canvas.drawText("F", 100f, arcCenterY - 100f, textPaint)
+        canvas.drawText("E", 100f, arcCenterY + 150f, textPaint)
         
         // Kotak Bensin
-        val fuelRect = RectF(centerX - radius - 50, centerY - 70, centerX - radius + 10, centerY + 70)
+        val fuelRect = RectF(85f, arcCenterY - 60f, 115f, arcCenterY + 100f)
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 5f
+        paint.strokeWidth = 4f
         paint.color = Color.GRAY
-        canvas.drawRoundRect(fuelRect, 10f, 10f, paint)
+        canvas.drawRoundRect(fuelRect, 5f, 5f, paint)
         
-        // Isi Bensin (Hijau)
+        // Isi Bensin
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#4CAF50")
-        canvas.drawRect(centerX - radius - 45, centerY - 65, centerX - radius + 5, centerY, paint)
+        canvas.drawRect(88f, arcCenterY - 50f, 112f, arcCenterY + 20f, paint)
 
-        // 6. Odometer (TOTAL) di Bawah
-        textPaint.textSize = 60f
+        // ==========================================
+        // 6. ODOMETER (Bawah Tengah)
+        // ==========================================
+        textPaint.textSize = 55f
         textPaint.color = Color.WHITE
-        canvas.drawText("TOTAL 160 km", centerX, centerY + radius + 110, textPaint)
+        canvas.drawText("TOTAL 160 km", centerX, h - 80f, textPaint)
     }
 }
