@@ -1,0 +1,48 @@
+name: Build Android APK
+
+# Kapan workflow ini berjalan?
+on:
+  push:
+    branches: [ "main", "master" ] # Berjalan otomatis saat kamu push ke branch main/master
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Tombol untuk menjalankan build secara manual dari tab Actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Menggunakan server Linux terbaru milik GitHub
+
+    steps:
+    # 1. Mengambil kode dari repository kamu
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # 2. Menyiapkan Java Development Kit (JDK) 17
+    # Wajib JDK 17 karena kita menset jvmTarget = '17' di build.gradle
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # 3. Memberikan izin eksekusi ke file gradlew (karena file dari Windows/GitHub web)
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # 4. Setup Android SDK
+    # (Langkah ini opsional, tapi memastikan SDK terinstall dengan benar)
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    # 5. Proses Build APK menggunakan Gradle Wrapper
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
+
+    # 6. Mengunggah (Upload) file APK hasil build agar bisa kamu download
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: PCX-Speedometer-APK
+        path: app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 7 # File APK akan disimpan di GitHub selama 7 hari
