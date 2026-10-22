@@ -2,59 +2,63 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 1. IZIN UNTUK KONEKSI HARDWARE (USB OTG & BLUETOOTH) -->
-    <!-- Izin untuk mendeteksi kabel USB OTG yang dicolok -->
-    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <!-- ========================================== -->
+    <!-- 1. DEKLARASI FITUR & IZIN HARDWARE         -->
+    <!-- ========================================== -->
     
-    <!-- Izin Bluetooth (untuk Android 12 ke atas wajib pakai ini) -->
+    <!-- Mendukung kabel USB OTG (Wajib untuk koneksi ke Mikrokontroler) -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+
+    <!-- Izin Bluetooth (Untuk Android 12 ke atas) -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
     
-    <!-- Izin Bluetooth untuk Android versi lama (di bawah Android 12) -->
+    <!-- Izin Bluetooth (Untuk Android 11 ke bawah) -->
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
 
-    <!-- Izin lokasi (Seringkali dibutuhkan oleh library Bluetooth di Android lama) -->
+    <!-- Izin Lokasi (Sering dibutuhkan library Bluetooth/USB di Android lama) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- 2. KONFIGURASI APLIKASI -->
-    <!-- allowBackup="false" agar data tidak di-backup otomatis oleh Google -->
-    <!-- supportsRtl="true" untuk dukungan bahasa kanan-ke-kiri -->
+
+    <!-- ========================================== -->
+    <!-- 2. KONFIGURASI APLIKASI                    -->
+    <!-- ========================================== -->
+    
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="PCX Speedo"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PcxUI">
         
-        <!-- 3. ACTIVITY UTAMA -->
-        <!-- Activity ini adalah layar yang pertama kali terbuka -->
+        <!-- ========================================== -->
+        <!-- 3. ACTIVITY UTAMA (Hanya dideklarasikan 1x)-->
+        <!-- ========================================== -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden">
+            
+            <!-- A. Filter agar aplikasi muncul di menu HP -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- 4. IZIN KHUSUS USB OTG (Agar aplikasi otomatis terbuka saat kabel dicolok) -->
-        <!-- Ganti "com.example.pcxui" dengan package name kamu jika berbeda -->
-        <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTask">
+            
+            <!-- B. Filter agar aplikasi otomatis terbuka saat kabel USB dicolok -->
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
+            
+            <!-- C. Memanggil daftar perangkat USB yang didukung -->
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
+                
         </activity>
         
     </application>
-
 </manifest>
