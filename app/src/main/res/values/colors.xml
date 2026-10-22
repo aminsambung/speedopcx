@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="pcx_bg">#1A1A1A</color>
+    <color name="pcx_red">#FF3B30</color>
+</resources>
