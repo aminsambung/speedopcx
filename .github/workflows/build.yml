@@ -31,9 +31,10 @@ jobs:
       run: chmod +x gradlew
 
     # 4. Setup Android SDK
-    # (Langkah ini opsional, tapi memastikan SDK terinstall dengan benar)
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        packages: '' # <--- Tambahkan baris ini untuk melewati pengunduhan default
 
     # 5. Proses Build APK menggunakan Gradle Wrapper
     - name: Build with Gradle
