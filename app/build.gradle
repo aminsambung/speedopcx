@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.pcxui'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.pcxui"
+        minSdk 21       // Sesuai permintaanmu: Support Android 5.0 (Lollipop) ke atas
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    // Pengaturan Java/Kotlin agar sesuai dengan JDK 17 (Standar GitHub Actions)
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    // Library dasar Android & Kotlin
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    
+    // Library untuk tes (standar, tidak akan mengganggu build APK)
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // =========================================================================
+    // TEMPAT MENAMBAHKAN LIBRARY NANTI (Saatnya eksperimen koneksi hardware)
+    // =========================================================================
+    
+    // 1. Library untuk USB OTG (Baca data dari Arduino/ESP32 lewat kabel)
+    // implementation 'com.github.felHR85:UsbSerial:6.1.0'
+    
+    // 2. Library untuk Bluetooth (Baca data dari HC-05/ESP32 lewat udara)
+    // implementation 'com.github.harry1453:android-utils:1.2.4' // contoh utility
+}
