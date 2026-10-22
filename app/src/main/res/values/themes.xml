@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    xmlns:tools="http://schemas.android.com/tools"> <!-- TAMBAHKAN INI -->
     <!-- 
       Kita menggunakan Theme.AppCompat.NoActionBar agar kompatibel dengan Android lama.
       NoActionBar digunakan agar tulisan "PCX Speedo" di bagian atas layar hilang, 
