@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 1. IZIN UNTUK KONEKSI HARDWARE (USB OTG & BLUETOOTH) -->
+    <!-- Izin untuk mendeteksi kabel USB OTG yang dicolok -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    
+    <!-- Izin Bluetooth (untuk Android 12 ke atas wajib pakai ini) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+    
+    <!-- Izin Bluetooth untuk Android versi lama (di bawah Android 12) -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+
+    <!-- Izin lokasi (Seringkali dibutuhkan oleh library Bluetooth di Android lama) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 2. KONFIGURASI APLIKASI -->
+    <!-- allowBackup="false" agar data tidak di-backup otomatis oleh Google -->
+    <!-- supportsRtl="true" untuk dukungan bahasa kanan-ke-kiri -->
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="PCX Speedo"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PcxUI">
+        
+        <!-- 3. ACTIVITY UTAMA -->
+        <!-- Activity ini adalah layar yang pertama kali terbuka -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 4. IZIN KHUSUS USB OTG (Agar aplikasi otomatis terbuka saat kabel dicolok) -->
+        <!-- Ganti "com.example.pcxui" dengan package name kamu jika berbeda -->
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
+        
+    </application>
+
+</manifest>
